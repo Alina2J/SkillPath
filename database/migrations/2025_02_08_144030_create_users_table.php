@@ -22,10 +22,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('education')->nullable();
             $table->text('direction')->nullable();
-            $table->timestamp('reg_date')->nullable();
-            $table->timestamp('last_login')->nullable();
-            $table->timestamp('login_time')->nullable();
-            $table->integer('usege_time')->default(0);
             $table->char('photo_url', 100);
             $table->rememberToken();
             $table->foreignId('role_id')->constrained('roles');

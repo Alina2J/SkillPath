@@ -139,42 +139,15 @@
                         @else
                             <h2>Цена</h2>
                             <ul class="profile-courses__list">
-                                @php
-                                    if (Auth::check()) {
-                                        $rating =
-                                            \App\Models\NormalizeResult::where('user_id', Auth::user()->id)->value(
-                                                'Result',
-                                            ) ?? 0;
-
-                                        if ($rating < 0.5) {
-                                            $discount = 0.2;
-                                        } elseif ($rating < 0.8) {
-                                            $discount = 0.1;
-                                        } else {
-                                            $discount = 0.05;
-                                        }
-                                    } else {
-                                        $discount = 0.2;
-                                    }
-
-                                    $discountedPrice = intval($course->price * (1 - $discount));
-                                @endphp
-
                                 <li class="profile-courses__item">
-                                    Обычная цена: <b>{{ $course->price }}₽</b>
-                                </li>
-                                <li class="profile-courses__item">
-                                    С учетом скидки: <b>{{ $discountedPrice }}₽</b>
+                                    Цена: <b>{{ $course->price }}₽</b>
                                 </li>
 
                                 @if (Auth::check())
                                     <li class="profile-courses__item">
-                                        Ваша скидка: <b>{{ $discount * 100 }}%</b>
-                                    </li>
-                                    <li class="profile-courses__item">
                                         <form action="{{ route('buy-course', $course->id) }}" method="POST">
                                             @csrf
-                                            <input type="hidden" name="price" value="{{ $discountedPrice }}">
+                                            <input type="hidden" name="price" value="{{ $course->price }}">
                                             <button type="submit"
                                                 style="background-color: #4A8AC8; color: #fff; padding: 1rem 2rem; border-radius: 2.5rem; border: none;">
                                                 Купить

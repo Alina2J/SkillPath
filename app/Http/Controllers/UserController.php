@@ -45,7 +45,6 @@ class UserController extends Controller
         $user->patronymic = $userData['patronymic'];
         $user->role_id = $userData['role'];
         $user->description = 'Описание профиля';
-        $user->reg_date = Carbon::now();
 
         $user->save();
 
@@ -58,15 +57,6 @@ class UserController extends Controller
 
     public function logout(Request $request) {
         $user = Auth::user();
-
-        if ($user && $user->login_time) {
-            $logoutTime = Carbon::now();
-            $usageTime = $logoutTime->diffInSeconds($user->login_time); // Разница в секундах
-
-            // Суммируем общее время использования
-            $user->usege_time += $usageTime;
-            $user->save();
-        }
 
         Auth::logout();
         $request->session()->invalidate();
@@ -85,15 +75,6 @@ class UserController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (Auth::attempt($credentials)) {
-            // Фиксируем вход в таблице visits
-            DB::table('visits')->insert([
-                'user_id' => $user->id,
-                'login_time' => now(),
-            ]);
-
-            // Обновляем поле last_login в users
-            $user->last_login = now();
-            $user->login_time = now();
             $user->save();
 
             $request->session()->regenerate();
